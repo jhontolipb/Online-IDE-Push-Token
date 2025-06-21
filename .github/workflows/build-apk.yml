@@ -32,6 +32,11 @@ jobs:
       - name: Debug Java
         run: java -version
 
+      - name: Generate autolinking.json
+        run: |
+          mkdir -p android/build/generated/autolinking
+          npx react-native config > android/build/generated/autolinking/autolinking.json
+
       - name: Build APK
         run: |
           echo "org.gradle.java.home=${{ steps.setup-java.outputs.path }}" >> android/gradle.properties
