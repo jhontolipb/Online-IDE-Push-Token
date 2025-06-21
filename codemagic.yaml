@@ -4,14 +4,24 @@ workflows:
     max_build_duration: 20
     environment:
       vars:
-        PACKAGE_NAME: "com.ssg"
-      node: 20.9.0  # 👈 FIXED: Use Node 20+
-      java: 17      # ✅ Required by AGP 8+
+        PACKAGE_NAME: "com.ssg"  # update if your package name is different
+      node: 20.9.0               # ✅ Fix Metro "os.availableParallelism" error
+      java: 17                   # ✅ Required for Gradle 8 + Android Gradle Plugin
     scripts:
-      - name: Install dependencies
+      - name: Clean install and clean gradle
         script: |
+          rm -rf node_modules android/.gradle
           npm install
-      - name: Clean and prepare assets
+          cd android
+          ./gradlew clean
+          cd ..
+      - name: Workaround for reanimated CMake issue
+        script: |
+          cd node_modules/react-native-reanimated
+          mkdir -p android/src/main/jni
+          echo "// skip cmake in CI" > android/src/main/jni/CMakeLists.txt
+          cd ../../../
+      - name: Bundle React Native assets
         script: |
           mkdir -p android/app/src/main/assets
           npx react-native bundle \
@@ -20,7 +30,7 @@ workflows:
             --entry-file index.js \
             --bundle-output android/app/src/main/assets/index.android.bundle \
             --assets-dest android/app/src/main/res/
-      - name: Build release APK
+      - name: Build APK
         script: |
           cd android
           ./gradlew assembleRelease
