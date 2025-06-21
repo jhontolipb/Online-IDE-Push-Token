@@ -28,13 +28,17 @@ jobs:
           rm -rf node_modules
           npm install
 
+      # ✅ FIX: Manually create the autolinking.json file
       - name: Fix broken autolinking
         run: |
           mkdir -p android/build/generated/autolinking
-          echo "{}" > android/build/generated/autolinking/autolinking.json
+          echo '{}' > android/build/generated/autolinking/autolinking.json
 
-      - name: Verify autolinking file
-        run: cat android/build/generated/autolinking/autolinking.json
+      # ✅ DEBUG: Confirm it's really there and valid
+      - name: Verify autolinking file content
+        run: |
+          ls -l android/build/generated/autolinking/
+          cat android/build/generated/autolinking/autolinking.json
 
       - name: Build APK
         run: |
