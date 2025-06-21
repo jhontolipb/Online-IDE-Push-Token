@@ -28,17 +28,17 @@ jobs:
           rm -rf node_modules
           npm install
 
-      # ✅ Add this to avoid autolinking crash
+      # ✅ DO NOT DELETE android/build here
+
+      # ✅ Fix broken autolinking (MUST be placed AFTER dependencies)
       - name: Fix broken autolinking
         run: |
           mkdir -p android/build/generated/autolinking
           echo "{}" > android/build/generated/autolinking/autolinking.json
 
-      # ✅ (Optional) Confirm the file exists
       - name: Verify autolinking file
         run: cat android/build/generated/autolinking/autolinking.json
 
-      # ✅ Disable New Architecture
       - name: Disable New Architecture
         run: echo "newArchEnabled=false" >> android/gradle.properties
 
