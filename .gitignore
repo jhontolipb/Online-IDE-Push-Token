@@ -24,9 +24,9 @@ DerivedData
 
 # Android/IntelliJ
 #
-build/
+android/app/build/
 .idea
-.gradle
+android/.gradle
 local.properties
 *.iml
 *.hprof
@@ -34,6 +34,8 @@ local.properties
 *.keystore
 !debug.keystore
 .kotlin/
+!android/build/generated/autolinking/autolinking.json
+
 
 # node.js
 #
