@@ -8,37 +8,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Java 17 (Temurin)
-        id: setup-java
+      - id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 16
 
-      - name: Print Java version
+      - run: npm install
+
+      - name: Debug Java
         run: |
-          echo "Using Java:"
+          echo "JAVA_HOME = $JAVA_HOME"
           java -version
-          echo "JAVA_HOME is $JAVA_HOME"
 
       - name: Build APK
         run: |
           echo "org.gradle.java.home=${{ steps.setup-java.outputs.path }}" >> android/gradle.properties
+          export JAVA_HOME=${{ steps.setup-java.outputs.path }}
           cd android
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon
         env:
           JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: android/app/build/outputs/apk/release/app-release.apk
