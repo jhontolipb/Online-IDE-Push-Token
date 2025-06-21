@@ -23,20 +23,24 @@ jobs:
       - name: Install React Native CLI
         run: npm install -g react-native
 
-      - name: Clean & reinstall deps
+      - name: Install Dependencies
         run: |
           rm -rf node_modules
-          rm -rf android/build
           npm install
 
-      - name: Disable New Architecture
-        run: echo "newArchEnabled=false" >> android/gradle.properties
-
-      - name: Clean autolinking cache
+      # ✅ Add this to avoid autolinking crash
+      - name: Fix broken autolinking
         run: |
-          rm -rf android/build/generated/autolinking
           mkdir -p android/build/generated/autolinking
           echo "{}" > android/build/generated/autolinking/autolinking.json
+
+      # ✅ (Optional) Confirm the file exists
+      - name: Verify autolinking file
+        run: cat android/build/generated/autolinking/autolinking.json
+
+      # ✅ Disable New Architecture
+      - name: Disable New Architecture
+        run: echo "newArchEnabled=false" >> android/gradle.properties
 
       - name: Build APK
         run: |
