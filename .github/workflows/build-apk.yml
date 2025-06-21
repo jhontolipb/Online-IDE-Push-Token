@@ -10,35 +10,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - id: setup-java
+      - name: Set up Java
+        id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 16
 
       - name: Install React Native CLI
         run: npm install -g react-native
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           rm -rf node_modules
           npm install
 
-      # ✅ FIX: Manually create the autolinking.json file
-      - name: Fix broken autolinking
+      - name: Fix autolinking crash
         run: |
           mkdir -p android/build/generated/autolinking
-          echo '{}' > android/build/generated/autolinking/autolinking.json
+          echo "{}" > android/build/generated/autolinking/autolinking.json
 
-      # ✅ DEBUG: Confirm it's really there and valid
-      - name: Verify autolinking file content
-        run: |
-          ls -l android/build/generated/autolinking/
-          cat android/build/generated/autolinking/autolinking.json
+      - name: Verify autolinking file (debug)
+        run: cat android/build/generated/autolinking/autolinking.json
 
       - name: Build APK
         run: |
