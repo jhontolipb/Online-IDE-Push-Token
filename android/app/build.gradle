@@ -117,3 +117,9 @@ dependencies {
         implementation jscFlavor
     }
 }
+// Add this at the bottom of android/app/build.gradle
+tasks.whenTaskAdded { task ->
+    if (task.name == "generateAutolinkingPackageList") {
+        task.enabled = false
+    }
+}
