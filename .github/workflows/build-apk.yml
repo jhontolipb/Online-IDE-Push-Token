@@ -28,9 +28,6 @@ jobs:
           rm -rf node_modules
           npm install
 
-      # ✅ DO NOT DELETE android/build here
-
-      # ✅ Fix broken autolinking (MUST be placed AFTER dependencies)
       - name: Fix broken autolinking
         run: |
           mkdir -p android/build/generated/autolinking
@@ -38,9 +35,6 @@ jobs:
 
       - name: Verify autolinking file
         run: cat android/build/generated/autolinking/autolinking.json
-
-      - name: Disable New Architecture
-        run: echo "newArchEnabled=false" >> android/gradle.properties
 
       - name: Build APK
         run: |
