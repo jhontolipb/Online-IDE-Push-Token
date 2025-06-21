@@ -1,26 +1,21 @@
 workflows:
-  react-native-workflow:
-    name: React Native Android Build (No CMake Crash)
-    max_build_duration: 20
+  react-native-apk:
+    name: React Native Build (No CMake Crash)
     environment:
-      vars:
-        PACKAGE_NAME: "com.ssg"
-      node: 20.9.0     # ✅ Required for Metro bundler (os.availableParallelism fix)
-      java: 17         # ✅ Required for AGP 8.x and Gradle 8.14
+      node: 20.9.0
+      java: 17
     scripts:
-      - name: Clean and reinstall
+      - name: Clean install and setup
         script: |
           rm -rf node_modules android/.gradle
           npm install
           cd android && ./gradlew clean && cd ..
-      - name: Skip Reanimated CMake
+      - name: Bypass reanimated native CMake build
         script: |
-          echo "Bypassing Reanimated native CMake build..."
-          cd node_modules/react-native-reanimated
-          mkdir -p android/src/main/jni
-          echo "// bypass cmake in CI/CD build" > android/src/main/jni/CMakeLists.txt
-          cd ../../../
-      - name: Bundle React Native JavaScript
+          echo "⚙️ Skipping Reanimated native build..."
+          mkdir -p node_modules/react-native-reanimated/android/src/main/jni
+          echo "// dummy cmake to skip build" > node_modules/react-native-reanimated/android/src/main/jni/CMakeLists.txt
+      - name: Bundle JS
         script: |
           mkdir -p android/app/src/main/assets
           npx react-native bundle \
@@ -29,7 +24,7 @@ workflows:
             --entry-file index.js \
             --bundle-output android/app/src/main/assets/index.android.bundle \
             --assets-dest android/app/src/main/res/
-      - name: Build the APK
+      - name: Build APK
         script: |
           cd android
           ./gradlew assembleRelease
