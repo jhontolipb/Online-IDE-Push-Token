@@ -17,19 +17,27 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: gradle
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 16
 
+      - name: Print Java version
+        run: |
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
+
       - name: Install dependencies
         run: npm install
 
-      - name: Build APK
+      - name: Build APK (force Java 17)
         run: |
           cd android
           ./gradlew assembleRelease
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
