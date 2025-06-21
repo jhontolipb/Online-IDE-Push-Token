@@ -7,7 +7,6 @@ workflows:
         PACKAGE_NAME: "com.ssg"  # Replace with your actual package name
       node: 16.20.0
       java: 11
-      xcode: 14.3  # required even if you're not using iOS (Codemagic requires it)
     scripts:
       - name: Install dependencies
         script: |
@@ -18,4 +17,3 @@ workflows:
           ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/**/*.apk
-
