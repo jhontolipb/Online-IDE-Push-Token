@@ -20,12 +20,17 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm install
+      - name: Install React Native CLI
+        run: npm install -g react-native
+
+      - name: Clean & reinstall deps
+        run: |
+          rm -rf node_modules
+          rm -rf android/build
+          npm install
 
       - name: Debug Java
-        run: |
-          echo "JAVA_HOME = $JAVA_HOME"
-          java -version
+        run: java -version
 
       - name: Build APK
         run: |
