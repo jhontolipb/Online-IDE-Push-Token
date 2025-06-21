@@ -5,8 +5,8 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "com.ssg"
-      node: 16.20.0
-      java: 17  # 👈 this is the fix
+      node: 20.9.0  # 👈 FIXED: Use Node 20+
+      java: 17      # ✅ Required by AGP 8+
     scripts:
       - name: Install dependencies
         script: |
