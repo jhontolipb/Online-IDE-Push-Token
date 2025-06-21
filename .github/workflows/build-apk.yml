@@ -29,13 +29,14 @@ jobs:
           rm -rf android/build
           npm install
 
-      - name: Debug Java
-        run: java -version
+      - name: Disable New Architecture
+        run: echo "newArchEnabled=false" >> android/gradle.properties
 
-      - name: Generate autolinking.json
+      - name: Clean autolinking cache
         run: |
+          rm -rf android/build/generated/autolinking
           mkdir -p android/build/generated/autolinking
-          npx react-native config > android/build/generated/autolinking/autolinking.json
+          echo "{}" > android/build/generated/autolinking/autolinking.json
 
       - name: Build APK
         run: |
